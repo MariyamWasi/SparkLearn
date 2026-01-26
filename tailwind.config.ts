@@ -13,6 +13,15 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+      },
+      fontSize: {
+        'page-title': ['1.875rem', { lineHeight: '1.3', fontWeight: '700' }], /* 30px */
+        'section-heading': ['1.375rem', { lineHeight: '1.3', fontWeight: '600' }], /* 22px */
+        'body': ['1rem', { lineHeight: '1.6', fontWeight: '400' }], /* 16px */
+        'small': ['0.875rem', { lineHeight: '1.5', fontWeight: '400' }], /* 14px */
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -30,6 +39,14 @@ export default {
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
@@ -57,6 +74,17 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+      },
+      spacing: {
+        'section': '2.5rem', /* 40px - section spacing */
+        'card-padding': '1.5rem', /* 24px - card padding */
+      },
+      maxWidth: {
+        'content': '800px', /* Max content width per style guide */
+      },
+      boxShadow: {
+        'soft': '0 4px 12px hsla(0, 0%, 0%, 0.05)',
+        'card': '0 4px 12px hsla(0, 0%, 0%, 0.05)',
       },
       borderRadius: {
         lg: "var(--radius)",
