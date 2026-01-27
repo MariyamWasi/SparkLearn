@@ -22,17 +22,17 @@ export function LearningPlatform() {
   if (!state.outline) {
     if (isGeneratingOutline) {
       return (
-        <div className="flex flex-col items-center justify-center min-h-screen px-6 bg-background">
-          <div className="text-center space-y-5">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-4">
+        <div className="flex flex-col items-center justify-center min-h-screen px-4">
+          <div className="text-center space-y-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
               <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
             </div>
-            <h2 className="text-section-heading font-semibold text-foreground">Creating your learning plan...</h2>
-            <p className="text-muted-foreground text-body">AI is designing a personalized curriculum for you</p>
-            <div className="max-w-sm mx-auto space-y-3 mt-8">
-              <Skeleton className="h-4 w-full bg-muted" />
-              <Skeleton className="h-4 w-3/4 bg-muted" />
-              <Skeleton className="h-4 w-5/6 bg-muted" />
+            <h2 className="text-xl font-semibold">Creating your learning plan...</h2>
+            <p className="text-muted-foreground">AI is designing a personalized curriculum for you</p>
+            <div className="max-w-sm mx-auto space-y-2 mt-6">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-5/6" />
             </div>
           </div>
         </div>
