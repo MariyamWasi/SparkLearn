@@ -34,7 +34,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "openai/gpt-5-mini",
         messages: [
           {
             role: "system",
@@ -42,7 +42,7 @@ serve(async (req) => {
 Write comprehensive, well-structured educational content in Markdown format.
 Include:
 - Clear explanations with examples
-- Key concepts highlighted
+- Key concepts highlighted using **bold** or \`code\` formatting
 - Practical tips or exercises where appropriate
 - A brief summary at the end
 

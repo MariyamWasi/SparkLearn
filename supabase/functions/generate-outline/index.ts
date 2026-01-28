@@ -34,11 +34,11 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "openai/gpt-5-mini",
         messages: [
           {
             role: "system",
-            content: `You are an expert curriculum designer. Create a structured learning outline for any topic. 
+            content: `You are an expert curriculum designer. Create a structured learning path for any topic.
 Return a JSON object with the following structure:
 {
   "title": "Course title",
@@ -58,7 +58,7 @@ Return a JSON object with the following structure:
     }
   ]
 }
-Create 3-5 modules with 2-4 lessons each. Keep it focused and practical.`
+IMPORTANT: Create EXACTLY 10 learning items total. Structure them as 5 modules with 2 lessons each, or 4 modules with varying lessons that total 10. Each item should build progressively on the previous one. Keep content focused and practical.`
           },
           {
             role: "user",
