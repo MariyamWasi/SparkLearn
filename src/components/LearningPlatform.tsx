@@ -10,10 +10,14 @@ export function LearningPlatform() {
     state,
     isGeneratingOutline,
     isGeneratingContent,
+    isLoadingPlans,
     currentContent,
     progress,
+    savedPlans,
     generateOutline,
     generateLessonContent,
+    loadSavedPlan,
+    deletePlan,
     goToNextLesson,
     goToPreviousLesson,
     resetLearning,
@@ -46,7 +50,14 @@ export function LearningPlatform() {
     return (
       <div className="min-h-screen bg-background">
         <AuthenticatedNavbar />
-        <TopicInput onSubmit={generateOutline} isLoading={isGeneratingOutline} />
+        <TopicInput 
+          onSubmit={generateOutline} 
+          onLoadPlan={loadSavedPlan}
+          onDeletePlan={deletePlan}
+          savedPlans={savedPlans}
+          isLoadingPlans={isLoadingPlans}
+          isLoading={isGeneratingOutline} 
+        />
       </div>
     );
   }
