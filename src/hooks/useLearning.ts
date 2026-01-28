@@ -2,9 +2,12 @@ import { useState, useCallback } from 'react';
 import { LearningOutline, LearningState } from '@/types/learning';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useSavedPlans } from '@/hooks/useSavedPlans';
 
 export function useLearning() {
   const { toast } = useToast();
+  const { savedPlans, isLoading: isLoadingPlans, savePlan, loadPlan, deletePlan, refreshPlans } = useSavedPlans();
+  
   const [state, setState] = useState<LearningState>({
     topic: '',
     outline: null,
@@ -12,6 +15,7 @@ export function useLearning() {
     currentLessonIndex: 0,
     completedLessons: new Set(),
   });
+  const [currentPlanId, setCurrentPlanId] = useState<string | null>(null);
   const [isGeneratingOutline, setIsGeneratingOutline] = useState(false);
   const [isGeneratingContent, setIsGeneratingContent] = useState(false);
   const [currentContent, setCurrentContent] = useState<string>('');
@@ -31,10 +35,16 @@ export function useLearning() {
         throw new Error(data.error);
       }
 
+      const outline = data.outline;
+
+      // Save the plan to the database
+      const planId = await savePlan(topic, outline);
+      setCurrentPlanId(planId);
+
       setState(prev => ({
         ...prev,
         topic,
-        outline: data.outline,
+        outline,
         currentModuleIndex: 0,
         currentLessonIndex: 0,
         completedLessons: new Set(),
@@ -54,7 +64,50 @@ export function useLearning() {
     } finally {
       setIsGeneratingOutline(false);
     }
-  }, [toast]);
+  }, [toast, savePlan]);
+
+  const loadSavedPlan = useCallback(async (planId: string) => {
+    setIsGeneratingOutline(true);
+    try {
+      const result = await loadPlan(planId);
+      if (result) {
+        setCurrentPlanId(planId);
+        
+        // Build completed lessons set from the outline
+        const completedLessons = new Set<string>();
+        result.outline.modules.forEach(module => {
+          module.lessons.forEach(lesson => {
+            if (lesson.completed) {
+              completedLessons.add(lesson.id);
+            }
+          });
+        });
+
+        setState({
+          topic: result.topic,
+          outline: result.outline,
+          currentModuleIndex: 0,
+          currentLessonIndex: 0,
+          completedLessons,
+        });
+
+        // Set content if first lesson has it
+        const firstLesson = result.outline.modules[0]?.lessons[0];
+        if (firstLesson?.content) {
+          setCurrentContent(firstLesson.content);
+        } else {
+          setCurrentContent('');
+        }
+
+        toast({
+          title: "Plan loaded!",
+          description: `Continuing your course on "${result.topic}".`,
+        });
+      }
+    } finally {
+      setIsGeneratingOutline(false);
+    }
+  }, [loadPlan, toast]);
 
   const generateLessonContent = useCallback(async (moduleIndex: number, lessonIndex: number) => {
     if (!state.outline) return;
@@ -146,7 +199,7 @@ export function useLearning() {
         }
       }
 
-      // Update the lesson with content
+      // Update the lesson with content in state
       setState(prev => {
         if (!prev.outline) return prev;
         const newOutline = { ...prev.outline };
@@ -163,6 +216,18 @@ export function useLearning() {
         return { ...prev, outline: newOutline };
       });
 
+      // Save content to database if we have a plan ID
+      if (currentPlanId && lesson.id) {
+        try {
+          await supabase.from('lesson_content').upsert({
+            lesson_id: lesson.id,
+            content: fullContent,
+          }, { onConflict: 'lesson_id' });
+        } catch (err) {
+          console.error('Failed to save lesson content:', err);
+        }
+      }
+
     } catch (error) {
       console.error('Error generating lesson:', error);
       toast({
@@ -173,14 +238,24 @@ export function useLearning() {
     } finally {
       setIsGeneratingContent(false);
     }
-  }, [state.outline, state.topic, toast]);
+  }, [state.outline, state.topic, toast, currentPlanId]);
 
-  const markLessonComplete = useCallback((lessonId: string) => {
+  const markLessonComplete = useCallback(async (lessonId: string) => {
     setState(prev => {
       const newCompleted = new Set(prev.completedLessons);
       newCompleted.add(lessonId);
       return { ...prev, completedLessons: newCompleted };
     });
+
+    // Update in database
+    try {
+      await supabase
+        .from('lessons')
+        .update({ completed: true })
+        .eq('id', lessonId);
+    } catch (err) {
+      console.error('Failed to mark lesson complete:', err);
+    }
   }, []);
 
   const goToNextLesson = useCallback(() => {
@@ -225,7 +300,9 @@ export function useLearning() {
       completedLessons: new Set(),
     });
     setCurrentContent('');
-  }, []);
+    setCurrentPlanId(null);
+    refreshPlans();
+  }, [refreshPlans]);
 
   const progress = state.outline 
     ? (state.completedLessons.size / state.outline.modules.reduce((acc, m) => acc + m.lessons.length, 0)) * 100
@@ -235,10 +312,14 @@ export function useLearning() {
     state,
     isGeneratingOutline,
     isGeneratingContent,
+    isLoadingPlans,
     currentContent,
     progress,
+    savedPlans,
     generateOutline,
     generateLessonContent,
+    loadSavedPlan,
+    deletePlan,
     markLessonComplete,
     goToNextLesson,
     goToPreviousLesson,

@@ -1,14 +1,27 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sparkles, BookOpen } from 'lucide-react';
+import { Sparkles, BookOpen, Clock, Trash2, ChevronRight } from 'lucide-react';
+import { SavedPlan } from '@/hooks/useSavedPlans';
+import { formatDistanceToNow } from 'date-fns';
 
 interface TopicInputProps {
   onSubmit: (topic: string) => void;
+  onLoadPlan: (planId: string) => void;
+  onDeletePlan: (planId: string) => void;
+  savedPlans: SavedPlan[];
+  isLoadingPlans: boolean;
   isLoading: boolean;
 }
 
-export function TopicInput({ onSubmit, isLoading }: TopicInputProps) {
+export function TopicInput({ 
+  onSubmit, 
+  onLoadPlan, 
+  onDeletePlan,
+  savedPlans, 
+  isLoadingPlans,
+  isLoading 
+}: TopicInputProps) {
   const [topic, setTopic] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -84,6 +97,51 @@ export function TopicInput({ onSubmit, isLoading }: TopicInputProps) {
           ))}
         </div>
       </form>
+
+      {/* Saved Plans Section */}
+      {!isLoadingPlans && savedPlans.length > 0 && (
+        <div className="w-full max-w-xl mt-12">
+          <h2 className="text-sm font-medium text-muted-foreground mb-4">
+            Continue Learning
+          </h2>
+          <div className="space-y-2">
+            {savedPlans.slice(0, 5).map((plan) => (
+              <div
+                key={plan.id}
+                className="group flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:border-primary/30 transition-colors duration-150"
+              >
+                <button
+                  onClick={() => onLoadPlan(plan.id)}
+                  className="flex-1 flex items-center gap-4 text-left"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center flex-shrink-0">
+                    <BookOpen className="w-5 h-5 text-accent-foreground" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-foreground truncate">{plan.title}</p>
+                    <p className="text-sm text-muted-foreground flex items-center gap-1.5 mt-0.5">
+                      <Clock className="w-3.5 h-3.5" />
+                      {formatDistanceToNow(new Date(plan.updated_at), { addSuffix: true })}
+                    </p>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                </button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDeletePlan(plan.id);
+                  }}
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
