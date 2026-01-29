@@ -21,7 +21,7 @@ export function OutlineReview({ outline, topic, onApprove, onReset }: OutlineRev
   return (
     <div className="flex flex-col h-full bg-background">
       <div className="flex-1 overflow-hidden">
-        <div className="max-w-3xl mx-auto px-6 py-10">
+        <div className="max-w-4xl mx-auto px-6 py-10">
           <div className="text-center mb-8">
             <p className="text-sm text-muted-foreground mb-2">Learning Path for</p>
             <h1 className="text-2xl font-semibold text-foreground mb-2">{outline.title}</h1>
@@ -73,7 +73,7 @@ export function OutlineReview({ outline, topic, onApprove, onReset }: OutlineRev
       </div>
 
       <div className="border-t border-border bg-background px-6 py-4">
-        <div className="max-w-3xl mx-auto flex items-center justify-between">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
           <Button
             variant="outline"
             onClick={onReset}
