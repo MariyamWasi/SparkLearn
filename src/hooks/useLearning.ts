@@ -19,6 +19,7 @@ export function useLearning() {
   const [isGeneratingOutline, setIsGeneratingOutline] = useState(false);
   const [isGeneratingContent, setIsGeneratingContent] = useState(false);
   const [currentContent, setCurrentContent] = useState<string>('');
+  const [isApproved, setIsApproved] = useState(false);
 
   const generateOutline = useCallback(async (topic: string) => {
     setIsGeneratingOutline(true);
@@ -37,10 +38,7 @@ export function useLearning() {
 
       const outline = data.outline;
 
-      // Save the plan to the database
-      const planId = await savePlan(topic, outline);
-      setCurrentPlanId(planId);
-
+      // Don't save plan yet - wait for approval
       setState(prev => ({
         ...prev,
         topic,
@@ -49,10 +47,11 @@ export function useLearning() {
         currentLessonIndex: 0,
         completedLessons: new Set(),
       }));
+      setIsApproved(false);
 
       toast({
-        title: "Learning plan created!",
-        description: `Your personalized course on "${topic}" is ready.`,
+        title: "Learning path generated!",
+        description: "Review the outline and approve to start learning.",
       });
     } catch (error) {
       console.error('Error generating outline:', error);
@@ -64,7 +63,33 @@ export function useLearning() {
     } finally {
       setIsGeneratingOutline(false);
     }
-  }, [toast, savePlan]);
+  }, [toast]);
+
+  const approveOutline = useCallback(async () => {
+    if (!state.outline) return;
+
+    try {
+      // Save the plan to the database on approval
+      const planId = await savePlan(state.topic, state.outline);
+      setCurrentPlanId(planId);
+      setIsApproved(true);
+
+      // Generate content for the first lesson
+      await generateLessonContentInternal(0, 0);
+
+      toast({
+        title: "Let's start learning!",
+        description: `Generating content for the first lesson.`,
+      });
+    } catch (error) {
+      console.error('Error approving outline:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save learning plan",
+        variant: "destructive",
+      });
+    }
+  }, [state.outline, state.topic, savePlan, toast]);
 
   const loadSavedPlan = useCallback(async (planId: string) => {
     setIsGeneratingOutline(true);
@@ -72,6 +97,7 @@ export function useLearning() {
       const result = await loadPlan(planId);
       if (result) {
         setCurrentPlanId(planId);
+        setIsApproved(true); // Already approved since it's saved
         
         // Build completed lessons set from the outline
         const completedLessons = new Set<string>();
@@ -109,7 +135,7 @@ export function useLearning() {
     }
   }, [loadPlan, toast]);
 
-  const generateLessonContent = useCallback(async (moduleIndex: number, lessonIndex: number) => {
+  const generateLessonContentInternal = useCallback(async (moduleIndex: number, lessonIndex: number) => {
     if (!state.outline) return;
 
     const module = state.outline.modules[moduleIndex];
@@ -240,6 +266,11 @@ export function useLearning() {
     }
   }, [state.outline, state.topic, toast, currentPlanId]);
 
+  const generateLessonContent = useCallback(async (moduleIndex: number, lessonIndex: number) => {
+    if (!isApproved) return;
+    await generateLessonContentInternal(moduleIndex, lessonIndex);
+  }, [isApproved, generateLessonContentInternal]);
+
   const markLessonComplete = useCallback(async (lessonId: string) => {
     setState(prev => {
       const newCompleted = new Set(prev.completedLessons);
@@ -301,6 +332,7 @@ export function useLearning() {
     });
     setCurrentContent('');
     setCurrentPlanId(null);
+    setIsApproved(false);
     refreshPlans();
   }, [refreshPlans]);
 
@@ -316,8 +348,10 @@ export function useLearning() {
     currentContent,
     progress,
     savedPlans,
+    isApproved,
     generateOutline,
     generateLessonContent,
+    approveOutline,
     loadSavedPlan,
     deletePlan,
     markLessonComplete,
