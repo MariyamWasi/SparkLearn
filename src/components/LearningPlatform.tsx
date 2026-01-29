@@ -2,6 +2,7 @@ import { useLearning } from '@/hooks/useLearning';
 import { TopicInput } from '@/components/TopicInput';
 import { LearningOutline } from '@/components/LearningOutline';
 import { LessonContent } from '@/components/LessonContent';
+import { OutlineReview } from '@/components/OutlineReview';
 import { AuthenticatedNavbar } from '@/components/AuthenticatedNavbar';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -14,8 +15,10 @@ export function LearningPlatform() {
     currentContent,
     progress,
     savedPlans,
+    isApproved,
     generateOutline,
     generateLessonContent,
+    approveOutline,
     loadSavedPlan,
     deletePlan,
     goToNextLesson,
@@ -34,8 +37,8 @@ export function LearningPlatform() {
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-accent mb-4">
                 <div className="w-6 h-6 border-2 border-accent-foreground border-t-transparent rounded-full animate-spin" />
               </div>
-              <h2 className="text-xl font-semibold text-foreground">Creating your learning plan...</h2>
-              <p className="text-muted-foreground text-base">AI is designing a personalized curriculum for you</p>
+              <h2 className="text-xl font-semibold text-foreground">Creating your learning path...</h2>
+              <p className="text-muted-foreground text-base">AI is generating 10 learning steps for you</p>
               <div className="max-w-sm mx-auto space-y-3 mt-8">
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-4 w-3/4" />
@@ -57,6 +60,21 @@ export function LearningPlatform() {
           savedPlans={savedPlans}
           isLoadingPlans={isLoadingPlans}
           isLoading={isGeneratingOutline} 
+        />
+      </div>
+    );
+  }
+
+  // Show outline review when outline exists but not yet approved
+  if (!isApproved) {
+    return (
+      <div className="min-h-screen bg-background">
+        <AuthenticatedNavbar />
+        <OutlineReview
+          outline={state.outline}
+          topic={state.topic}
+          onApprove={approveOutline}
+          onReset={resetLearning}
         />
       </div>
     );
