@@ -74,12 +74,9 @@ export function useLearning() {
       setCurrentPlanId(planId);
       setIsApproved(true);
 
-      // Generate content for the first lesson
-      await generateLessonContentInternal(0, 0);
-
       toast({
-        title: "Let's start learning!",
-        description: `Generating content for the first lesson.`,
+        title: "Learning path approved!",
+        description: "Click on any lesson to start learning.",
       });
     } catch (error) {
       console.error('Error approving outline:', error);
