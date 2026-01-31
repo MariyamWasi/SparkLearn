@@ -1,14 +1,7 @@
 import { LearningOutline as OutlineType } from '@/types/learning';
-import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { 
-  Accordion, 
-  AccordionContent, 
-  AccordionItem, 
-  AccordionTrigger 
-} from '@/components/ui/accordion';
-import { CheckCircle2, Circle, Clock, ArrowLeft } from 'lucide-react';
+import { CheckCircle2, Circle, ArrowLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface LearningOutlineProps {
@@ -30,89 +23,107 @@ export function LearningOutline({
   onLessonSelect,
   onReset,
 }: LearningOutlineProps) {
+  // Flatten lessons for linear navigation
+  const allLessons: { moduleIndex: number; lessonIndex: number; lesson: typeof outline.modules[0]['lessons'][0]; module: typeof outline.modules[0] }[] = [];
+  outline.modules.forEach((module, moduleIndex) => {
+    module.lessons.forEach((lesson, lessonIndex) => {
+      allLessons.push({ moduleIndex, lessonIndex, lesson, module });
+    });
+  });
+
+  const currentFlatIndex = allLessons.findIndex(
+    l => l.moduleIndex === currentModuleIndex && l.lessonIndex === currentLessonIndex
+  );
+
   return (
-    <div className="w-80 border-r border-border bg-sidebar flex flex-col h-screen">
-      {/* Sidebar header */}
-      <div className="p-6 border-b border-border">
+    <div className="w-72 border-r border-border bg-sidebar flex flex-col h-screen">
+      {/* Header */}
+      <div className="p-5 border-b border-border">
         <button 
           onClick={onReset}
-          className="mb-5 -ml-1 text-xs text-muted-foreground hover:text-foreground transition-colors duration-150 flex items-center gap-1.5"
+          className="mb-4 text-xs text-muted-foreground hover:text-foreground transition-colors duration-150 flex items-center gap-1.5"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          New topic
+          <ArrowLeft className="w-3 h-3" />
+          Exit
         </button>
-        <h2 className="font-semibold text-base leading-snug text-foreground">{outline.title}</h2>
-        <p className="text-sm text-muted-foreground mt-2 leading-relaxed line-clamp-2">{outline.description}</p>
+        <h2 className="font-semibold text-sm leading-snug text-foreground line-clamp-2">{outline.title}</h2>
         
-        {/* Progress indicator - subtle */}
-        <div className="mt-6">
-          <div className="flex justify-between text-xs mb-2">
-            <span className="text-muted-foreground">Progress</span>
-            <span className="text-foreground">{Math.round(progress)}%</span>
+        {/* Progress */}
+        <div className="mt-4">
+          <div className="flex justify-between text-xs mb-1.5">
+            <span className="text-muted-foreground">{Math.round(progress)}% complete</span>
+            <span className="text-muted-foreground">{completedLessons.size}/{allLessons.length}</span>
           </div>
           <Progress value={progress} className="h-1" />
         </div>
       </div>
 
-      {/* Module list */}
+      {/* Step list - linear, not nested */}
       <ScrollArea className="flex-1">
-        <Accordion 
-          type="multiple" 
-          defaultValue={outline.modules.map(m => m.id)}
-          className="p-4"
-        >
-          {outline.modules.map((module, moduleIndex) => (
-            <AccordionItem key={module.id} value={module.id} className="border-none">
-              <AccordionTrigger className="py-3 px-3 hover:no-underline hover:bg-accent/50 rounded-lg transition-colors duration-150">
-                <div className="flex items-start gap-3 text-left">
-                  <span className="text-xs text-muted-foreground mt-0.5 min-w-[1rem] tabular-nums">
-                    {moduleIndex + 1}
-                  </span>
-                  <span className="text-sm font-medium text-foreground leading-snug">{module.title}</span>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="pb-3">
-                <div className="space-y-0.5 ml-6">
-                  {module.lessons.map((lesson, lessonIndex) => {
-                    const isActive = moduleIndex === currentModuleIndex && lessonIndex === currentLessonIndex;
-                    const isCompleted = completedLessons.has(lesson.id);
-                    
-                    return (
-                      <button
-                        key={lesson.id}
-                        onClick={() => onLessonSelect(moduleIndex, lessonIndex)}
-                        className={cn(
-                          "w-full text-left py-2 px-3 rounded-lg transition-colors duration-150 flex items-center gap-3",
-                          isActive 
-                            ? "bg-primary text-primary-foreground" 
-                            : "hover:bg-accent/50"
-                        )}
-                      >
-                        {isCompleted ? (
-                          <CheckCircle2 className={cn(
-                            "w-3.5 h-3.5 flex-shrink-0",
-                            isActive ? "text-primary-foreground" : "text-success"
-                          )} />
-                        ) : (
-                          <Circle className={cn(
-                            "w-3.5 h-3.5 flex-shrink-0",
-                            isActive ? "text-primary-foreground/70" : "text-muted-foreground/50"
-                          )} />
-                        )}
-                        <span className={cn(
-                          "text-sm flex-1 truncate",
-                          isActive ? "text-primary-foreground" : "text-muted-foreground"
-                        )}>
-                          {lesson.title}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+        <div className="p-3">
+          {allLessons.map((item, flatIndex) => {
+            const isActive = flatIndex === currentFlatIndex;
+            const isCompleted = completedLessons.has(item.lesson.id);
+            const isUpcoming = flatIndex > currentFlatIndex && !isCompleted;
+            const showModuleHeader = flatIndex === 0 || allLessons[flatIndex - 1].moduleIndex !== item.moduleIndex;
+
+            return (
+              <div key={item.lesson.id}>
+                {/* Module header - subtle */}
+                {showModuleHeader && (
+                  <div className="px-3 pt-4 pb-2 first:pt-1">
+                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground/70">
+                      {item.module.title}
+                    </span>
+                  </div>
+                )}
+                
+                {/* Step item */}
+                <button
+                  onClick={() => onLessonSelect(item.moduleIndex, item.lessonIndex)}
+                  disabled={isUpcoming && !isCompleted}
+                  className={cn(
+                    "w-full text-left py-2.5 px-3 rounded-lg transition-all duration-150 flex items-center gap-3 mb-0.5",
+                    isActive && "bg-primary text-primary-foreground shadow-sm",
+                    isCompleted && !isActive && "hover:bg-accent/50",
+                    isUpcoming && "opacity-50 cursor-not-allowed"
+                  )}
+                >
+                  {/* Step indicator */}
+                  {isCompleted ? (
+                    <CheckCircle2 className={cn(
+                      "w-4 h-4 flex-shrink-0",
+                      isActive ? "text-primary-foreground" : "text-success"
+                    )} />
+                  ) : isActive ? (
+                    <div className="w-4 h-4 flex-shrink-0 rounded-full border-2 border-primary-foreground flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary-foreground" />
+                    </div>
+                  ) : (
+                    <Circle className="w-4 h-4 flex-shrink-0 text-muted-foreground/40" />
+                  )}
+                  
+                  {/* Step content */}
+                  <div className="flex-1 min-w-0">
+                    <span className={cn(
+                      "text-sm block truncate",
+                      isActive && "font-medium",
+                      !isActive && !isCompleted && "text-muted-foreground",
+                      isCompleted && !isActive && "text-foreground"
+                    )}>
+                      {item.lesson.title}
+                    </span>
+                  </div>
+
+                  {/* Current indicator */}
+                  {isActive && (
+                    <ChevronRight className="w-4 h-4 flex-shrink-0 text-primary-foreground/70" />
+                  )}
+                </button>
+              </div>
+            );
+          })}
+        </div>
       </ScrollArea>
     </div>
   );
