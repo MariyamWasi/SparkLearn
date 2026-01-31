@@ -21,44 +21,46 @@ export function OutlineReview({ outline, topic, onApprove, onReset }: OutlineRev
   return (
     <div className="flex flex-col h-full bg-background">
       <div className="flex-1 overflow-hidden">
-        <div className="max-w-4xl mx-auto px-6 py-10">
-          <div className="text-center mb-8">
-            <p className="text-sm text-muted-foreground mb-2">Learning Path for</p>
-            <h1 className="text-2xl font-semibold text-foreground mb-2">{outline.title}</h1>
-            <p className="text-muted-foreground">{outline.description}</p>
-            <div className="flex items-center justify-center gap-4 mt-4 text-sm text-muted-foreground">
+        <div className="max-w-4xl mx-auto px-6 py-16">
+          {/* Header with generous spacing */}
+          <div className="text-center mb-12">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground mb-3">Your Learning Path</p>
+            <h1 className="text-[32px] font-semibold text-foreground leading-tight mb-3">{outline.title}</h1>
+            <p className="text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">{outline.description}</p>
+            <div className="flex items-center justify-center gap-3 mt-6 text-sm text-muted-foreground">
               <span>{totalLessons} lessons</span>
-              <span>•</span>
-              <span className="flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                ~{totalMinutes} min total
+              <span className="text-border">·</span>
+              <span className="flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5" />
+                {totalMinutes} min
               </span>
             </div>
           </div>
 
-          <ScrollArea className="h-[calc(100vh-380px)]">
-            <div className="space-y-4">
+          {/* Module list with increased spacing */}
+          <ScrollArea className="h-[calc(100vh-420px)]">
+            <div className="space-y-5">
               {outline.modules.map((module, moduleIndex) => (
-                <Card key={module.id} className="border-border">
-                  <CardContent className="p-5">
-                    <div className="flex items-start gap-4">
-                      <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-accent flex items-center justify-center text-sm font-medium text-accent-foreground">
+                <Card key={module.id} className="border-border shadow-card">
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-5">
+                      <span className="flex-shrink-0 w-9 h-9 rounded-lg bg-accent flex items-center justify-center text-sm font-medium text-accent-foreground">
                         {moduleIndex + 1}
                       </span>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-foreground">{module.title}</h3>
-                        <p className="text-sm text-muted-foreground mt-1">{module.description}</p>
-                        <div className="mt-3 space-y-2">
+                        <h3 className="text-base font-medium text-foreground">{module.title}</h3>
+                        <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">{module.description}</p>
+                        <div className="mt-4 space-y-2.5">
                           {module.lessons.map((lesson, lessonIndex) => (
                             <div
                               key={lesson.id}
-                              className="flex items-center gap-2 text-sm text-muted-foreground"
+                              className="flex items-center gap-3 text-sm"
                             >
-                              <span className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-xs">
+                              <span className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-xs text-muted-foreground">
                                 {lessonIndex + 1}
                               </span>
-                              <span className="flex-1">{lesson.title}</span>
-                              <span className="text-xs">{lesson.estimatedMinutes} min</span>
+                              <span className="flex-1 text-muted-foreground">{lesson.title}</span>
+                              <span className="text-xs text-muted-foreground/70">{lesson.estimatedMinutes} min</span>
                             </div>
                           ))}
                         </div>
@@ -72,22 +74,22 @@ export function OutlineReview({ outline, topic, onApprove, onReset }: OutlineRev
         </div>
       </div>
 
-      <div className="border-t border-border bg-background px-6 py-4">
+      {/* Footer with single primary CTA */}
+      <div className="border-t border-border bg-card px-6 py-5">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <Button
-            variant="outline"
+          <button
             onClick={onReset}
-            className="gap-2"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-150 flex items-center gap-2"
           >
-            <RotateCcw className="w-4 h-4" />
-            Start Over
-          </Button>
+            <RotateCcw className="w-3.5 h-3.5" />
+            Start over
+          </button>
           <Button
             onClick={onApprove}
-            className="gap-2"
+            size="lg"
+            className="px-6"
           >
-            <Check className="w-4 h-4" />
-            Approve & Start Learning
+            Begin Learning
           </Button>
         </div>
       </div>
