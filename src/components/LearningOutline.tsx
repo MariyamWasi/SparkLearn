@@ -41,7 +41,7 @@ export function LearningOutline({
       <div className="p-5 border-b border-border">
         <button 
           onClick={onReset}
-          className="mb-4 text-xs text-muted-foreground hover:text-foreground transition-colors duration-150 flex items-center gap-1.5"
+          className="mb-3 text-xs text-muted-foreground hover:text-foreground transition-colors duration-150 flex items-center gap-1"
         >
           <ArrowLeft className="w-3 h-3" />
           Exit
@@ -49,9 +49,8 @@ export function LearningOutline({
         <h2 className="font-semibold text-sm leading-snug text-foreground line-clamp-2">{outline.title}</h2>
         
         {/* Progress */}
-        <div className="mt-4">
+        <div className="mt-3">
           <div className="flex justify-between text-xs mb-1.5">
-            <span className="text-muted-foreground">{Math.round(progress)}% complete</span>
             <span className="text-muted-foreground">{completedLessons.size}/{allLessons.length}</span>
           </div>
           <Progress value={progress} className="h-1" />

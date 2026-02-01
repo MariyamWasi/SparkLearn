@@ -22,19 +22,13 @@ export function OutlineReview({ outline, topic, onApprove, onReset }: OutlineRev
     <div className="flex flex-col h-full bg-background">
       <div className="flex-1 overflow-hidden">
         <div className="max-w-4xl mx-auto px-6 py-16">
-          {/* Header with generous spacing */}
+          {/* Header - clean and minimal */}
           <div className="text-center mb-12">
-            <p className="text-xs uppercase tracking-wide text-muted-foreground mb-3">Your Learning Path</p>
-            <h1 className="text-[32px] font-semibold text-foreground leading-tight mb-3">{outline.title}</h1>
-            <p className="text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">{outline.description}</p>
-            <div className="flex items-center justify-center gap-3 mt-6 text-sm text-muted-foreground">
-              <span>{totalLessons} lessons</span>
-              <span className="text-border">·</span>
-              <span className="flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5" />
-                {totalMinutes} min
-              </span>
-            </div>
+            <p className="text-xs uppercase tracking-wide text-muted-foreground mb-3">Your path</p>
+            <h1 className="text-[32px] font-semibold text-foreground leading-tight mb-4">{outline.title}</h1>
+            <p className="text-sm text-muted-foreground">
+              {totalLessons} lessons · {totalMinutes} min total
+            </p>
           </div>
 
           {/* Module list with increased spacing */}
