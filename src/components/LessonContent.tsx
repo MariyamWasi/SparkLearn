@@ -92,18 +92,14 @@ export function LessonContent({
         <div className="max-w-[680px] mx-auto">
           {isLoading && !content ? (
             <div className="space-y-6">
-              <div className="flex items-center gap-2 text-success mb-8">
+              <div className="flex items-center gap-2 text-muted-foreground mb-8">
                 <Sparkles className="w-4 h-4 animate-pulse" />
-                <span className="text-sm">Preparing your lesson...</span>
+                <span className="text-sm">Loading...</span>
               </div>
               <Skeleton className="h-6 w-2/3" />
               <Skeleton className="h-4 w-full" />
               <Skeleton className="h-4 w-full" />
               <Skeleton className="h-4 w-4/5" />
-              <div className="h-8" />
-              <Skeleton className="h-5 w-1/2" />
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-5/6" />
             </div>
           ) : (
             <article className="prose prose-neutral dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:text-foreground prose-h2:text-lg prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-base prose-h3:mt-8 prose-h3:mb-3 prose-p:text-foreground/85 prose-p:leading-[1.75] prose-p:mb-5 prose-li:text-foreground/85 prose-li:leading-[1.7] prose-ul:my-4 prose-ol:my-4 prose-strong:text-foreground prose-code:text-sm prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded">
@@ -118,31 +114,24 @@ export function LessonContent({
         </div>
       </ScrollArea>
 
-      {/* Primary action footer - clear single CTA */}
-      <div className="border-t border-border bg-card px-8 py-6">
+      {/* Primary action footer - single CTA */}
+      <div className="border-t border-border bg-card px-8 py-5">
         <div className="max-w-[680px] mx-auto">
           {isLastLesson ? (
-            <div className="flex items-center justify-center gap-3 text-success">
-              <CheckCircle2 className="w-5 h-5" />
-              <span className="font-medium">You've completed this course!</span>
+            <div className="flex items-center justify-center gap-2 text-success">
+              <CheckCircle2 className="w-4 h-4" />
+              <span className="text-sm font-medium">Complete</span>
             </div>
           ) : (
-            <div className="flex flex-col items-center gap-3">
-              <Button
-                onClick={onNext}
-                disabled={isLoading}
-                size="lg"
-                className="w-full max-w-sm"
-              >
-                Continue
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-              {nextLessonTitle && (
-                <p className="text-xs text-muted-foreground">
-                  Next: {nextLessonTitle}
-                </p>
-              )}
-            </div>
+            <Button
+              onClick={onNext}
+              disabled={isLoading}
+              size="lg"
+              className="w-full max-w-xs mx-auto flex"
+            >
+              Continue
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
           )}
         </div>
       </div>

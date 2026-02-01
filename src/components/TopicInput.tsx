@@ -44,11 +44,11 @@ export function TopicInput({
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-accent mb-8">
           <BookOpen className="w-7 h-7 text-accent-foreground" />
         </div>
-        <h1 className="text-[30px] font-semibold tracking-tight text-foreground mb-4 leading-tight">
-          Learn Anything
+        <h1 className="text-[30px] font-semibold tracking-tight text-foreground mb-3 leading-tight">
+          What would you like to learn?
         </h1>
-        <p className="text-muted-foreground text-base leading-relaxed max-w-md mx-auto">
-          Enter a topic and get a personalized learning plan with AI-generated content
+        <p className="text-muted-foreground text-sm">
+          We'll create a personalized path just for you.
         </p>
       </div>
 
@@ -74,10 +74,7 @@ export function TopicInput({
                 Creating...
               </>
             ) : (
-              <>
-                <Sparkles className="w-4 h-4 mr-2" />
-                Start Learning
-              </>
+              'Go'
             )}
           </Button>
         </div>
@@ -101,8 +98,8 @@ export function TopicInput({
       {/* Saved Plans Section */}
       {!isLoadingPlans && savedPlans.length > 0 && (
         <div className="w-full max-w-xl mt-12">
-          <h2 className="text-sm font-medium text-muted-foreground mb-4">
-            Continue Learning
+          <h2 className="text-xs uppercase tracking-wide text-muted-foreground mb-4">
+            Continue where you left off
           </h2>
           <div className="space-y-2">
             {savedPlans.slice(0, 5).map((plan) => (
