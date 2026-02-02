@@ -25,35 +25,17 @@ export function LessonContent({
   onPrevious,
   onNext,
 }: LessonContentProps) {
-  const currentModule = outline.modules[currentModuleIndex];
-  const currentLesson = currentModule?.lessons[currentLessonIndex];
-
-  const isFirstLesson = currentModuleIndex === 0 && currentLessonIndex === 0;
-  const isLastLesson = 
-    currentModuleIndex === outline.modules.length - 1 && 
-    currentLessonIndex === currentModule?.lessons.length - 1;
-
-  // Calculate total step number
-  let totalSteps = 0;
-  let currentStepNumber = 0;
-  outline.modules.forEach((mod, mIdx) => {
-    mod.lessons.forEach((_, lIdx) => {
-      totalSteps++;
-      if (mIdx < currentModuleIndex || (mIdx === currentModuleIndex && lIdx <= currentLessonIndex)) {
-        currentStepNumber = totalSteps;
-      }
-    });
-  });
-
-  // Get next lesson title
-  let nextLessonTitle = '';
-  if (!isLastLesson) {
-    if (currentLessonIndex < currentModule.lessons.length - 1) {
-      nextLessonTitle = currentModule.lessons[currentLessonIndex + 1].title;
-    } else if (currentModuleIndex < outline.modules.length - 1) {
-      nextLessonTitle = outline.modules[currentModuleIndex + 1].lessons[0].title;
-    }
+  // Early return if no modules/lessons
+  if (!outline.modules || outline.modules.length === 0) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <p className="text-muted-foreground">No lessons available. Generate a new learning path.</p>
+      </div>
+    );
   }
+
+  const currentModule = outline.modules[currentModuleIndex];
+  const currentLesson = currentModule?.lessons?.[currentLessonIndex];
 
   if (!currentModule || !currentLesson) {
     return (
@@ -61,6 +43,38 @@ export function LessonContent({
         <p className="text-muted-foreground">Select a lesson to begin</p>
       </div>
     );
+  }
+
+  const isFirstLesson = currentModuleIndex === 0 && currentLessonIndex === 0;
+  const isLastLesson = 
+    currentModuleIndex === outline.modules.length - 1 && 
+    currentLessonIndex === currentModule.lessons.length - 1;
+
+  // Calculate total step number
+  let totalSteps = 0;
+  let currentStepNumber = 0;
+  outline.modules.forEach((mod, mIdx) => {
+    if (mod.lessons) {
+      mod.lessons.forEach((_, lIdx) => {
+        totalSteps++;
+        if (mIdx < currentModuleIndex || (mIdx === currentModuleIndex && lIdx <= currentLessonIndex)) {
+          currentStepNumber = totalSteps;
+        }
+      });
+    }
+  });
+
+  // Get next lesson title
+  let nextLessonTitle = '';
+  if (!isLastLesson && currentModule.lessons) {
+    if (currentLessonIndex < currentModule.lessons.length - 1) {
+      nextLessonTitle = currentModule.lessons[currentLessonIndex + 1].title;
+    } else if (currentModuleIndex < outline.modules.length - 1) {
+      const nextModule = outline.modules[currentModuleIndex + 1];
+      if (nextModule.lessons && nextModule.lessons.length > 0) {
+        nextLessonTitle = nextModule.lessons[0].title;
+      }
+    }
   }
 
   return (

@@ -23,17 +23,43 @@ export function LearningOutline({
   onLessonSelect,
   onReset,
 }: LearningOutlineProps) {
-  // Flatten lessons for linear navigation
+  // Flatten lessons for linear navigation - with safety checks
   const allLessons: { moduleIndex: number; lessonIndex: number; lesson: typeof outline.modules[0]['lessons'][0]; module: typeof outline.modules[0] }[] = [];
-  outline.modules.forEach((module, moduleIndex) => {
-    module.lessons.forEach((lesson, lessonIndex) => {
-      allLessons.push({ moduleIndex, lessonIndex, lesson, module });
+  
+  if (outline.modules && outline.modules.length > 0) {
+    outline.modules.forEach((module, moduleIndex) => {
+      if (module.lessons && module.lessons.length > 0) {
+        module.lessons.forEach((lesson, lessonIndex) => {
+          allLessons.push({ moduleIndex, lessonIndex, lesson, module });
+        });
+      }
     });
-  });
+  }
 
   const currentFlatIndex = allLessons.findIndex(
     l => l.moduleIndex === currentModuleIndex && l.lessonIndex === currentLessonIndex
   );
+
+  // Show empty state if no lessons
+  if (allLessons.length === 0) {
+    return (
+      <div className="w-72 border-r border-border bg-sidebar flex flex-col h-screen">
+        <div className="p-5 border-b border-border">
+          <button 
+            onClick={onReset}
+            className="mb-3 text-xs text-muted-foreground hover:text-foreground transition-colors duration-150 flex items-center gap-1"
+          >
+            <ArrowLeft className="w-3 h-3" />
+            Exit
+          </button>
+          <h2 className="font-semibold text-sm leading-snug text-foreground line-clamp-2">{outline.title}</h2>
+        </div>
+        <div className="flex-1 flex items-center justify-center p-5">
+          <p className="text-sm text-muted-foreground text-center">No lessons available</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-72 border-r border-border bg-sidebar flex flex-col h-screen">
