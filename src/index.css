@@ -8,102 +8,103 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Notion-inspired off-white background */
-    --background: 60 14% 96%;
-    --foreground: 200 7% 20%;
+    /* Calm off-white background - warm paper tone */
+    --background: 40 20% 98%;
+    --foreground: 220 10% 25%;
 
-    /* Cards - pure white with charcoal text */
+    /* Cards - soft white with warm undertone */
     --card: 0 0% 100%;
-    --card-foreground: 200 7% 20%;
+    --card-foreground: 220 10% 25%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 200 7% 20%;
+    --popover-foreground: 220 10% 25%;
 
-    /* Primary - Charcoal Black */
-    --primary: 200 7% 20%;
+    /* Primary - Soft charcoal, used sparingly for CTAs */
+    --primary: 220 10% 22%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - Muted Blue-Gray */
-    --secondary: 220 9% 94%;
-    --secondary-foreground: 220 9% 46%;
+    /* Secondary - Very soft gray */
+    --secondary: 220 8% 96%;
+    --secondary-foreground: 220 10% 40%;
 
-    /* Muted text colors */
-    --muted: 60 6% 94%;
-    --muted-foreground: 218 11% 45%;
+    /* Muted - Softer, calmer grays */
+    --muted: 40 10% 96%;
+    --muted-foreground: 220 8% 50%;
 
-    /* Accent - Soft Sage Green */
-    --accent: 152 24% 92%;
-    --accent-foreground: 152 24% 35%;
+    /* Accent - Very subtle sage, used sparingly */
+    --accent: 150 12% 94%;
+    --accent-foreground: 150 15% 32%;
 
-    /* Status colors - soft and non-alarming */
-    --destructive: 0 55% 66%;
+    /* Status colors - muted and gentle */
+    --destructive: 0 40% 62%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Borders - subtle Notion-style */
-    --border: 60 6% 90%;
-    --input: 60 6% 90%;
-    --ring: 152 24% 72%;
+    /* Borders - nearly invisible, soft separation */
+    --border: 40 10% 92%;
+    --input: 40 10% 92%;
+    --ring: 150 12% 75%;
 
-    --radius: 0.625rem;
+    --radius: 0.5rem;
 
-    /* Sidebar */
-    --sidebar-background: 60 14% 97%;
-    --sidebar-foreground: 200 7% 20%;
-    --sidebar-primary: 200 7% 20%;
+    /* Sidebar - slightly cooler than main background */
+    --sidebar-background: 40 15% 97%;
+    --sidebar-foreground: 220 10% 25%;
+    --sidebar-primary: 220 10% 22%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 152 24% 92%;
-    --sidebar-accent-foreground: 200 7% 20%;
-    --sidebar-border: 60 6% 90%;
-    --sidebar-ring: 152 24% 72%;
+    --sidebar-accent: 150 12% 94%;
+    --sidebar-accent-foreground: 220 10% 25%;
+    --sidebar-border: 40 10% 92%;
+    --sidebar-ring: 150 12% 75%;
 
-    /* Custom tokens for the style guide */
-    --success: 154 24% 64%;
+    /* Custom tokens - softer status colors */
+    --success: 150 18% 58%;
     --success-foreground: 0 0% 100%;
-    --warning: 40 67% 69%;
-    --warning-foreground: 200 7% 20%;
+    --warning: 38 50% 65%;
+    --warning-foreground: 220 10% 22%;
   }
 
   .dark {
-    --background: 200 7% 10%;
-    --foreground: 60 14% 96%;
+    /* Calm dark mode - soft charcoal, not pure black */
+    --background: 220 12% 10%;
+    --foreground: 40 15% 92%;
 
-    --card: 200 7% 12%;
-    --card-foreground: 60 14% 96%;
+    --card: 220 12% 12%;
+    --card-foreground: 40 15% 92%;
 
-    --popover: 200 7% 12%;
-    --popover-foreground: 60 14% 96%;
+    --popover: 220 12% 12%;
+    --popover-foreground: 40 15% 92%;
 
-    --primary: 60 14% 96%;
-    --primary-foreground: 200 7% 20%;
+    --primary: 40 15% 92%;
+    --primary-foreground: 220 12% 12%;
 
-    --secondary: 200 7% 18%;
-    --secondary-foreground: 60 14% 90%;
+    --secondary: 220 10% 16%;
+    --secondary-foreground: 40 12% 80%;
 
-    --muted: 200 7% 18%;
-    --muted-foreground: 218 11% 65%;
+    --muted: 220 10% 16%;
+    --muted-foreground: 220 8% 55%;
 
-    --accent: 152 24% 20%;
-    --accent-foreground: 152 24% 80%;
+    --accent: 150 12% 18%;
+    --accent-foreground: 150 15% 75%;
 
-    --destructive: 0 55% 50%;
+    --destructive: 0 40% 48%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 200 7% 20%;
-    --input: 200 7% 20%;
-    --ring: 152 24% 50%;
+    --border: 220 10% 18%;
+    --input: 220 10% 18%;
+    --ring: 150 12% 45%;
 
-    --sidebar-background: 200 7% 8%;
-    --sidebar-foreground: 60 14% 96%;
-    --sidebar-primary: 152 24% 72%;
-    --sidebar-primary-foreground: 200 7% 10%;
-    --sidebar-accent: 200 7% 15%;
-    --sidebar-accent-foreground: 60 14% 96%;
-    --sidebar-border: 200 7% 20%;
-    --sidebar-ring: 152 24% 50%;
+    --sidebar-background: 220 12% 8%;
+    --sidebar-foreground: 40 15% 92%;
+    --sidebar-primary: 150 15% 65%;
+    --sidebar-primary-foreground: 220 12% 10%;
+    --sidebar-accent: 220 10% 14%;
+    --sidebar-accent-foreground: 40 15% 92%;
+    --sidebar-border: 220 10% 18%;
+    --sidebar-ring: 150 12% 45%;
 
-    --success: 154 24% 50%;
+    --success: 150 18% 45%;
     --success-foreground: 0 0% 100%;
-    --warning: 40 67% 55%;
+    --warning: 38 45% 52%;
     --warning-foreground: 0 0% 100%;
   }
 }
