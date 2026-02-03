@@ -82,9 +82,9 @@ export function LearningPlatform() {
 
   // Show learning interface with outline and content
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen overflow-hidden">
       <AuthenticatedNavbar />
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 min-h-0">
         <LearningOutline
           outline={state.outline}
           currentModuleIndex={state.currentModuleIndex}
