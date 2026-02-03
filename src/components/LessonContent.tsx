@@ -78,14 +78,14 @@ export function LessonContent({
   }
 
   return (
-    <div className="flex-1 flex flex-col h-screen bg-background">
+    <div className="flex-1 flex flex-col h-full bg-background overflow-hidden">
       {/* Minimal header showing progress */}
-      <div className="border-b border-border px-8 py-5 flex items-center justify-between">
+      <div className="border-b border-border px-8 py-6 flex items-center justify-between bg-card/50">
         <div>
-          <p className="text-xs text-muted-foreground mb-1">
+          <p className="text-sm text-muted-foreground mb-1.5">
             Step {currentStepNumber} of {totalSteps}
           </p>
-          <h1 className="text-xl font-semibold text-foreground leading-tight">{currentLesson.title}</h1>
+          <h1 className="text-2xl font-semibold text-foreground leading-tight">{currentLesson.title}</h1>
         </div>
         
         {/* Back button - subtle, not competing with primary action */}
@@ -93,58 +93,60 @@ export function LessonContent({
           <button
             onClick={onPrevious}
             disabled={isLoading}
-            className="text-xs text-muted-foreground hover:text-foreground disabled:opacity-40 transition-colors flex items-center gap-1"
+            className="text-sm text-muted-foreground hover:text-foreground disabled:opacity-40 transition-colors flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-accent"
           >
-            <ChevronLeft className="w-3.5 h-3.5" />
+            <ChevronLeft className="w-4 h-4" />
             Back
           </button>
         )}
       </div>
 
       {/* Content */}
-      <ScrollArea className="flex-1 px-8 py-10">
-        <div className="max-w-[680px] mx-auto">
+      <ScrollArea className="flex-1">
+        <div className="px-8 py-10 max-w-[720px] mx-auto">
           {isLoading && !content ? (
             <div className="space-y-6">
-              <div className="flex items-center gap-2 text-muted-foreground mb-8">
-                <Sparkles className="w-4 h-4 animate-pulse" />
-                <span className="text-sm">Loading...</span>
+              <div className="flex items-center gap-3 text-muted-foreground mb-8">
+                <Sparkles className="w-5 h-5 animate-pulse" />
+                <span className="text-base">Generating lesson content...</span>
               </div>
-              <Skeleton className="h-6 w-2/3" />
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-4/5" />
+              <Skeleton className="h-7 w-2/3" />
+              <Skeleton className="h-5 w-full" />
+              <Skeleton className="h-5 w-full" />
+              <Skeleton className="h-5 w-4/5" />
+              <Skeleton className="h-5 w-full mt-4" />
+              <Skeleton className="h-5 w-3/4" />
             </div>
           ) : (
-            <article className="prose prose-neutral dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:text-foreground prose-h2:text-lg prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-base prose-h3:mt-8 prose-h3:mb-3 prose-p:text-foreground/85 prose-p:leading-[1.75] prose-p:mb-5 prose-li:text-foreground/85 prose-li:leading-[1.7] prose-ul:my-4 prose-ol:my-4 prose-strong:text-foreground prose-code:text-sm prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded">
+            <article className="prose prose-neutral dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:text-foreground prose-h2:text-xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-lg prose-h3:mt-8 prose-h3:mb-3 prose-p:text-foreground/90 prose-p:leading-[1.8] prose-p:mb-5 prose-p:text-base prose-li:text-foreground/90 prose-li:leading-[1.75] prose-li:text-base prose-ul:my-5 prose-ol:my-5 prose-strong:text-foreground prose-code:text-sm prose-code:bg-muted prose-code:px-2 prose-code:py-1 prose-code:rounded-md">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {content}
               </ReactMarkdown>
               {isLoading && (
-                <span className="inline-block w-1.5 h-5 bg-success animate-pulse ml-0.5 rounded-sm" />
+                <span className="inline-block w-2 h-6 bg-success animate-pulse ml-1 rounded-sm" />
               )}
             </article>
           )}
         </div>
       </ScrollArea>
 
-      {/* Primary action footer - single CTA */}
-      <div className="border-t border-border bg-card px-8 py-5">
-        <div className="max-w-[680px] mx-auto">
+      {/* Primary action footer - prominent CTA */}
+      <div className="border-t border-border bg-card px-8 py-6 shadow-lg">
+        <div className="max-w-[720px] mx-auto">
           {isLastLesson ? (
-            <div className="flex items-center justify-center gap-2 text-success">
-              <CheckCircle2 className="w-4 h-4" />
-              <span className="text-sm font-medium">Complete</span>
+            <div className="flex items-center justify-center gap-3 py-3 px-6 bg-accent rounded-xl">
+              <CheckCircle2 className="w-5 h-5 text-success" />
+              <span className="text-base font-medium text-foreground">Course Complete!</span>
             </div>
           ) : (
             <Button
               onClick={onNext}
               disabled={isLoading}
               size="lg"
-              className="w-full max-w-xs mx-auto flex"
+              className="w-full py-6 text-base font-medium shadow-md hover:shadow-lg transition-shadow"
             >
-              Continue
-              <ArrowRight className="w-4 h-4 ml-2" />
+              Continue to Next Lesson
+              <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
           )}
         </div>
