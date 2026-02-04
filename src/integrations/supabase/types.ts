@@ -231,6 +231,7 @@ export type Database = {
         Returns: string
       }
       user_owns_learning_plan: { Args: { plan_id: string }; Returns: boolean }
+      user_owns_lesson_plan: { Args: { les_id: string }; Returns: boolean }
       user_owns_module_plan: { Args: { mod_id: string }; Returns: boolean }
     }
     Enums: {
